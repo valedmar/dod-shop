@@ -11,6 +11,12 @@ $dotenv->load();
 
 $appName = $_ENV['APP_NAME'];
 
+if (isset($_GET["view"])) {
+    $view = htmlspecialchars($_GET["view"]);
+} else {
+    $view = '';
+}
+
 if (isset($_GET["error"])) {
     $error = htmlspecialchars($_GET["error"]);
 } else {
@@ -27,10 +33,11 @@ if (isset($_GET["error"])) {
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="container">
+<div class="container <?php if ($view == "r"): ?> active<?php endif; ?>">
     <div class="diagonal-bg"></div>
     <div class="form-box login">
         <h2>Login</h2>
+        <?php if ($error == "create"): ?><h3>Account created!</h3><?php endif; ?>
         <form action="login.php" method="post" id="loginform" novalidate>
 
             <div class="input-box">
@@ -69,25 +76,25 @@ if (isset($_GET["error"])) {
 
             <div class="input-box">
                 <label for="register-email" class="sr-only">Email</label>
-                <input type="email" required id="register-email" autocomplete="email"
+                <input type="email" required id="register-email" autocomplete="email" name="email"
                        aria-describedby="invalid-register-email">
                 <label>Email</label>
                 <i class="bx bx-envelope" aria-hidden="true"></i>
             </div>
-            <div class="error" id="invalid-register-email" role="alert"></div>
+            <div class="error" id="invalid-register-email" role="alert"><?php if ($error == "mail"): ?> Email already registrered.<?php endif; ?></div>
 
             <div class="input-box">
                 <label for="register-username" class="sr-only">Username</label>
-                <input type="text" required id="register-username" autocomplete="username"
+                <input type="text" required id="register-username" autocomplete="username" name="username"
                        aria-describedby="invalid-register-username">
                 <label>Username</label>
                 <i class="bx bxs-user" aria-hidden="true"></i>
             </div>
-            <div class="error" id="invalid-register-username" role="alert"></div>
+            <div class="error" id="invalid-register-username" role="alert"><?php if ($error == "taken"): ?> Username already registrered.<?php endif; ?></div>
 
             <div class="input-box">
                 <label for="register-password" class="sr-only">Password</label>
-                <input type="password" required id="register-password" autocomplete="new-password"
+                <input type="password" required id="register-password" autocomplete="new-password" name="password"
                        aria-describedby="invalid-register-password same-user-pw">
                 <label>Password</label>
                 <i class="bx bxs-lock-alt" aria-hidden="true"></i>

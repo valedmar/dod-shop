@@ -100,8 +100,8 @@ function register(event) {
     setTimeout(() => {
         regisSubmitBtn.disabled = false;
         regisSubmitBtn.textContent = 'Register';
-        alert('Register simulated - valid inputs. Implement server auth for real logins.');
-        regisForm.reset();
+        // alert('Register simulated - valid inputs. Implement server auth for real logins.');
+        regisForm.submit();
         
         registerInputs.forEach(input => {
             input.classList.remove('has-value');

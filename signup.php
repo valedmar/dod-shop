@@ -22,23 +22,56 @@ $useremail = htmlspecialchars($_POST["email"]);
 $username = htmlspecialchars($_POST["username"]);
 $userpassword = htmlspecialchars($_POST["password"]);
 
+// check if mail is taken
 $result = $conn->execute_query("SELECT username FROM users WHERE email=?", [$useremail]);
 
 // Process the result set
 if ($result->num_rows > 0) {
   // Output data of each row
   while($row = $result->fetch_assoc()) {
-    if ($username == $row["username"]) {
-      header("Location: http://shop.slyshaft.com/index.php?error=taken");
-      die();
-    } else {
-      header("Location: http://shop.slyshaft.com/index.php?error=pwd");
-      die();
+        header("Location: http://shop.slyshaft.com/index.php?error=mail&view=r");
+        die();
     }
-  }
-} else {
-  header("Location: http://shop.slyshaft.com/index.php?error=usr");
-  die();
 }
+
+//check if username is taken
+$result = $conn->execute_query("SELECT username FROM users WHERE username=?", [$username]);
+// Process the result set
+if ($result->num_rows > 0) {
+  // Output data of each row
+  while($row = $result->fetch_assoc()) {
+    header("Location: http://shop.slyshaft.com/index.php?error=taken&view=r");
+    die();
+  }
+} else { // create the user
+    $ptla_key = $_ENV["PTLA_KEY"];
+    $client = new GuzzleHttp\Client();
+
+    $userData = [
+        'email' => $useremail,
+        'username' => $username,
+        'first_name' => 'New',
+        'last_name' => 'User',
+        'password' => $userpassword,
+        'language' => 'en',
+        'root_admin' => false
+    ];
+
+    $response = $client->post('https://panel.slyshaft.com/api/application/users', [
+        'headers' => [
+            'Authorization' => 'Bearer '. $ptla_key,
+            'Accept' => 'Application/vnd.pterodactyl.v1+json',
+            'Content-Type' => 'application/json'
+        ],
+        'json' => $userData
+    ]);
+
+    // $data = json_decode($response->getBody(), true);
+    //print_r($data);
+
+    header("Location: http://shop.slyshaft.com/index.php?error=create");
+    die();
+}
+
 
 ?>
