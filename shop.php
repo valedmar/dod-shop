@@ -4,9 +4,11 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+$domain = $_ENV["DOMAIN"];
+
 session_start();
 if (!isset($_SESSION['username']) || empty($_SESSION['username'])) {
-    header("Location: http://shop.slyshaft.com/index.php");
+    header("Location: https://$domain/index.php");
     die();
 
 }

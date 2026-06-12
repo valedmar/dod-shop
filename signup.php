@@ -6,6 +6,9 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+$domain = $_ENV["DOMAIN"];
+$panel_domain = $_ENV["PANEL_DOMAIN"];
+
 $MySQL_DB_HOST = $_ENV['MySQL_DB_HOST'];
 $MySQL_DB_USER_NAME = $_ENV['MySQL_DB_USER_NAME'];
 $MySQL_DB_PASSWORD = $_ENV['MySQL_DB_PASSWORD'];
@@ -29,7 +32,7 @@ $result = $conn->execute_query("SELECT username FROM users WHERE email=?", [$use
 if ($result->num_rows > 0) {
   // Output data of each row
   while($row = $result->fetch_assoc()) {
-        header("Location: http://shop.slyshaft.com/index.php?error=mail&view=r");
+        header("Location: http://$domain/index.php?error=mail&view=r");
         die();
     }
 }
@@ -40,7 +43,7 @@ $result = $conn->execute_query("SELECT username FROM users WHERE username=?", [$
 if ($result->num_rows > 0) {
   // Output data of each row
   while($row = $result->fetch_assoc()) {
-    header("Location: http://shop.slyshaft.com/index.php?error=taken&view=r");
+    header("Location: http://$domain/index.php?error=taken&view=r");
     die();
   }
 } else { // create the user
@@ -57,7 +60,7 @@ if ($result->num_rows > 0) {
         'root_admin' => false
     ];
 
-    $response = $client->post('https://panel.slyshaft.com/api/application/users', [
+    $response = $client->post("https://$panel_domain/api/application/users", [
         'headers' => [
             'Authorization' => 'Bearer '. $ptla_key,
             'Accept' => 'Application/vnd.pterodactyl.v1+json',
@@ -69,7 +72,7 @@ if ($result->num_rows > 0) {
     // $data = json_decode($response->getBody(), true);
     //print_r($data);
 
-    header("Location: http://shop.slyshaft.com/index.php?error=create");
+    header("Location: http://$domain/index.php?error=create");
     die();
 }
 

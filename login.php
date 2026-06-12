@@ -6,6 +6,8 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+$domain = $_ENV["DOMAIN"];
+
 $MySQL_DB_HOST = $_ENV['MySQL_DB_HOST'];
 $MySQL_DB_USER_NAME = $_ENV['MySQL_DB_USER_NAME'];
 $MySQL_DB_PASSWORD = $_ENV['MySQL_DB_PASSWORD'];
@@ -32,15 +34,15 @@ if ($result->num_rows > 0) {
       // echo "logged in";
       session_start();
       $_SESSION['username'] = $username;
-      header("Location: http://shop.slyshaft.com/shop.php");
+      header("Location: http://$domain/shop.php");
       die();
     } else {
-      header("Location: http://shop.slyshaft.com/index.php?error=pwd");
+      header("Location: http://$domain/index.php?error=pwd");
       die();
     }
   }
 } else {
-  header("Location: http://shop.slyshaft.com/index.php?error=usr");
+  header("Location: http://$domain/index.php?error=usr");
   die();
 }
 
