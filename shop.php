@@ -6,6 +6,7 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+$appName = $_ENV["APP_NAME"];
 $domain = $_ENV["DOMAIN"];
 $panel_domain = $_ENV["PANEL_DOMAIN"];
 $ptla_key = $_ENV["PTLA_KEY"];
@@ -48,10 +49,56 @@ function queryServer($uuid) {
     return $data;
 }
 
-function buyServerForm() {
-    echo "<h1>Buy server plz</h1>";
+function displayServers($servers) {
+    foreach ($servers as $uuid) {
+        $serverData[] = queryServer($uuid);
+    }
 
-    die();
+    // print_r($serverData);
+
+    ?>
+    <html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title><?php echo $GLOBALS["appName"]; ?> | Servers</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+        </style>
+    </head>
+    <table style="width:60%">
+    <caption>Your servers</caption>
+    <tr>
+        <th>Server name</th>
+        <th>Server game</th>
+        <th>Server memory</th>
+        <th>Server disk</th>
+    </tr>
+    <?php
+    foreach ($serverData as $server) {
+        $server = $server["data"][0]["attributes"];
+        if ($server["nest"] == 1) {
+            $server["nest"] = "Minecraft";
+        }
+        if ($server["limits"]["disk"] == 0) {
+            $server["limits"]["disk"] = "Unlimited";
+        }
+        print "
+        <tr>
+            <td>" . $server["name"] . "</td>
+            <td>" . $server["nest"] . "</td>
+            <td>" . $server["limits"]["memory"] . " MiB</td>
+            <td>" . $server["limits"]["disk"] . " GiB</td>
+        </tr>
+        ";
+    }
+    ?>
+    </table>
+    </hmtl>
+<?php
 }
 
 
@@ -75,15 +122,11 @@ if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {
         $servers[] = $row["uuid"];
     }
+  displayServers($servers);
 } else {
-    echo "no servers";
-    buyServerForm();
+    echo "No servers";
 }
 
-foreach ($servers as $uuid) {
-    $serverData[] = queryServer($uuid);
-}
-
-print_r($serverData);
-
+// let's make a signout button yher
 ?>
+<li style='font-size:20px;'><a href='./logout.php?logout-submit=logout'>Logout</a></li>
