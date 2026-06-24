@@ -21,9 +21,26 @@ if ($conn->connect_error) {
   die("Error: " . $conn->connect_error);
 }
 
-$useremail = htmlspecialchars($_POST["email"]);
-$username = htmlspecialchars($_POST["username"]);
-$userpassword = htmlspecialchars($_POST["password"]);
+if (!isset($_POST["email"]) || empty($_POST["email"])) {
+    header("Location: https://$domain/index.php");
+    die();
+} else {
+  $useremail = htmlspecialchars($_POST["email"]);
+}
+
+if (!isset($_POST["username"]) || empty($_POST["username"])) {
+    header("Location: https://$domain/index.php");
+    die();
+} else {
+  $username = htmlspecialchars($_POST["username"]);
+}
+
+if (!isset($_POST["password"]) || empty($_POST["password"])) {
+    header("Location: https://$domain/index.php");
+    die();
+} else {
+  $userpassword = htmlspecialchars($_POST["password"]);
+}
 
 // check if mail is taken
 $result = $conn->execute_query("SELECT username FROM users WHERE email=?", [$useremail]);

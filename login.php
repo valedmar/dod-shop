@@ -41,7 +41,7 @@ if ($result->num_rows > 0) {
       die();
     }
   }
-} else {
+} else { // burde slette denne, så brugeren ikke kan regne ud om en bruger eksisterer.
   header("Location: http://$domain/index.php?error=usr");
   die();
 }
